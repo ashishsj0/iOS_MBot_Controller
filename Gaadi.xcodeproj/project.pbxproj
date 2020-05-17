@@ -7,9 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB47CAAC24715651002B4A9E /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB47CAAB24715651002B4A9E /* UIViewExtension.swift */; };
+		DB47CAAE2471595B002B4A9E /* BluetoothDevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB47CAAD2471595B002B4A9E /* BluetoothDevicesViewController.swift */; };
+		DB47CAB1247159B9002B4A9E /* BluetoothDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB47CAB0247159B9002B4A9E /* BluetoothDeviceTableViewCell.swift */; };
+		DB47CAB324715BEA002B4A9E /* BluetoothConnectionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB47CAB224715BEA002B4A9E /* BluetoothConnectionHandler.swift */; };
 		DBCD51D9245742BF007C74BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCD51D8245742BF007C74BF /* AppDelegate.swift */; };
 		DBCD51DB245742BF007C74BF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCD51DA245742BF007C74BF /* SceneDelegate.swift */; };
-		DBCD51DD245742BF007C74BF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCD51DC245742BF007C74BF /* ViewController.swift */; };
+		DBCD51DD245742BF007C74BF /* MbotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCD51DC245742BF007C74BF /* MbotViewController.swift */; };
 		DBCD51E0245742BF007C74BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBCD51DE245742BF007C74BF /* Main.storyboard */; };
 		DBCD51E2245742C1007C74BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBCD51E1245742C1007C74BF /* Assets.xcassets */; };
 		DBCD51E5245742C1007C74BF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBCD51E3245742C1007C74BF /* LaunchScreen.storyboard */; };
@@ -17,10 +21,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DB47CAAB24715651002B4A9E /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		DB47CAAD2471595B002B4A9E /* BluetoothDevicesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevicesViewController.swift; sourceTree = "<group>"; };
+		DB47CAB0247159B9002B4A9E /* BluetoothDeviceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDeviceTableViewCell.swift; sourceTree = "<group>"; };
+		DB47CAB224715BEA002B4A9E /* BluetoothConnectionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothConnectionHandler.swift; sourceTree = "<group>"; };
 		DBCD51D5245742BF007C74BF /* Gaadi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gaadi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCD51D8245742BF007C74BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBCD51DA245742BF007C74BF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		DBCD51DC245742BF007C74BF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DBCD51DC245742BF007C74BF /* MbotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MbotViewController.swift; sourceTree = "<group>"; };
 		DBCD51DF245742BF007C74BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DBCD51E1245742C1007C74BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DBCD51E4245742C1007C74BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -39,6 +47,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DB47CAAF2471598C002B4A9E /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				DB47CAB0247159B9002B4A9E /* BluetoothDeviceTableViewCell.swift */,
+			);
+			path = TableViewCells;
+			sourceTree = "<group>";
+		};
+		DB47CAB424715BF1002B4A9E /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				DB47CAB224715BEA002B4A9E /* BluetoothConnectionHandler.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		DBCD51CC245742BF007C74BF = {
 			isa = PBXGroup;
 			children = (
@@ -58,6 +82,7 @@
 		DBCD51D7245742BF007C74BF /* Gaadi */ = {
 			isa = PBXGroup;
 			children = (
+				DB47CAAF2471598C002B4A9E /* TableViewCells */,
 				DBCD51ED24575B95007C74BF /* Controllers */,
 				DBCD51EC24575B8E007C74BF /* Extensions */,
 				DBCD51D8245742BF007C74BF /* AppDelegate.swift */,
@@ -66,6 +91,7 @@
 				DBCD51E1245742C1007C74BF /* Assets.xcassets */,
 				DBCD51E3245742C1007C74BF /* LaunchScreen.storyboard */,
 				DBCD51E6245742C1007C74BF /* Info.plist */,
+				DB47CAB424715BF1002B4A9E /* Classes */,
 			);
 			path = Gaadi;
 			sourceTree = "<group>";
@@ -73,6 +99,7 @@
 		DBCD51EC24575B8E007C74BF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				DB47CAAB24715651002B4A9E /* UIViewExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -97,7 +124,8 @@
 		DBCD51EF24575BBE007C74BF /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				DBCD51DC245742BF007C74BF /* ViewController.swift */,
+				DBCD51DC245742BF007C74BF /* MbotViewController.swift */,
+				DB47CAAD2471595B002B4A9E /* BluetoothDevicesViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -174,8 +202,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBCD51F124575BDD007C74BF /* ArduinoController.swift in Sources */,
-				DBCD51DD245742BF007C74BF /* ViewController.swift in Sources */,
+				DB47CAAC24715651002B4A9E /* UIViewExtension.swift in Sources */,
+				DBCD51DD245742BF007C74BF /* MbotViewController.swift in Sources */,
+				DB47CAAE2471595B002B4A9E /* BluetoothDevicesViewController.swift in Sources */,
+				DB47CAB1247159B9002B4A9E /* BluetoothDeviceTableViewCell.swift in Sources */,
 				DBCD51D9245742BF007C74BF /* AppDelegate.swift in Sources */,
+				DB47CAB324715BEA002B4A9E /* BluetoothConnectionHandler.swift in Sources */,
 				DBCD51DB245742BF007C74BF /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
