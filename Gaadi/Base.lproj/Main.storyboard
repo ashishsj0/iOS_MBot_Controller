@@ -44,6 +44,9 @@
                                                     <state key="normal" title="Connect">
                                                         <color key="titleColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="btnConnectTapped:" destination="AOU-Mz-9wY" eventType="touchUpInside" id="Nfh-vj-4W1"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -54,8 +57,16 @@
                                                 <constraint firstAttribute="trailing" secondItem="e4d-l4-mb3" secondAttribute="trailing" constant="9" id="qJB-TF-N1w"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="btnConnect" destination="e4d-l4-mb3" id="dfL-H5-fQ4"/>
+                                            <outlet property="lblDeviceName" destination="H4s-j1-G1i" id="HWW-EJ-m21"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Ghs-mx-FBk" id="Ggm-9f-a63"/>
+                                    <outlet property="delegate" destination="Ghs-mx-FBk" id="XwK-AJ-2jM"/>
+                                </connections>
                             </tableView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icons8-initial-state-100" translatesAutoresizingMaskIntoConstraints="NO" id="rqy-Vj-idM">
                                 <rect key="frame" x="168" y="107" width="200" height="200"/>
@@ -93,6 +104,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="vQN-22-43k"/>
                     </view>
+                    <connections>
+                        <outlet property="imgScan" destination="rqy-Vj-idM" id="kLP-1w-sok"/>
+                        <outlet property="tblDevices" destination="vUb-7A-fcL" id="b0h-Yg-ZSL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cVA-0z-uoa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

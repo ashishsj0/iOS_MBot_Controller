@@ -7,22 +7,47 @@
 //
 
 import UIKit
+import CoreBluetooth
 
 class BluetoothDevicesViewController: UIViewController {
+        
+    var peripherals: [CBPeripheral] = []
 
-    var devices: [BluetoothDevice] = []
-
+    
     var bluetoothHandler: BluetoothConnectionHandler = BluetoothConnectionHandler()
+    @IBOutlet weak var imgScan: UIImageView!
+    @IBOutlet weak var tblDevices: UITableView!
+    
+  //  var uuid = CBUUID.init(string: "0x00000002826152e0")
     
     @IBAction func scanDevices(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
-        sender.titleLabel?.text = !sender.isSelected ? (" Start Scan") : ("Stop Scan")
-        !sender.isSelected ? bluetoothHandler.scanDevices() :
-        bluetoothHandler.cancelScan()
+        
+        if bluetoothHandler.isScanning {
+            bluetoothHandler.cancelScan { status, err in
+                sender.titleLabel?.text = status ? ("Scan") : ("Cancel")
+                status ? self.imgScan.pulsate(false) : self.imgScan.pulsate(true)
+            }}
+            else {
+            self.imgScan.pulsate(true)
+            sender.titleLabel?.text = "Cancel"
+            bluetoothHandler.scanDevices { devicesFound, err in
+                sender.titleLabel?.text = devicesFound.isEmpty ? ("Scan") : ("Cancel")
+                if devicesFound.isEmpty {
+                    self.imgScan.pulsate(true)
+                }
+                else { self.imgScan.pulsate(false)
+                    self.peripherals = devicesFound
+                    self.tblDevices.reloadData()
+                }
+                
+            }
+            }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tblDevices.dataSource = self
+        self.tblDevices.delegate = self
     }
 }
 
@@ -31,13 +56,13 @@ class BluetoothDevicesViewController: UIViewController {
 extension BluetoothDevicesViewController: UITableViewDelegate, UITableViewDataSource {
         
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return devices.count
+        return peripherals.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BluetoothDeviceTableViewCell") as! BluetoothDeviceTableViewCell
-        cell.lblDeviceName.text = devices[indexPath.row].name
         cell.delegate = self
+        cell.lblDeviceName.text = peripherals[indexPath.row].name ?? "____________"
         cell.btnConnect.tag = indexPath.row
         return cell
     }
@@ -55,15 +80,4 @@ extension BluetoothDevicesViewController: BluetoothDeviceTableViewCellProtocol {
         
     }
 }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 
