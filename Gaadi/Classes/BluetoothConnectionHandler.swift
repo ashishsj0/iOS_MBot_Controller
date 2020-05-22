@@ -19,19 +19,11 @@ class BluetoothConnectionHandler: NSObject  {
     
     private static let sharedInstance = BluetoothConnectionHandler()
     private var centralManager: CBCentralManager!
-    
     var delegate: BluetoothConnectionHandlerProtocol?
     var connectedPeripheral: CBPeripheral?
     var targetService: CBService?
     var writableCharacteristic: CBCharacteristic?
-    
     var peripherals: [CBPeripheral] = []
-    
-    var isScanning: Bool {
-        get {
-            return centralManager.isScanning
-        }
-    }
     
     override init() {
         super.init()
@@ -42,15 +34,20 @@ class BluetoothConnectionHandler: NSObject  {
         return sharedInstance
     }
     
+    public func isScanning() -> Bool {
+        return self.centralManager.isScanning
+    }
+    
     func scan(comp: (_ result: String) -> ()) {
         self.centralManager.scanForPeripherals(withServices: nil, options: nil)
-        
     }
     
     func scanDevices(status: @escaping([CBPeripheral]) -> Void) {
+        self.peripherals = []
+        
         self.centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
             if self.peripherals.count > 0 {
                 status(self.peripherals)
             }

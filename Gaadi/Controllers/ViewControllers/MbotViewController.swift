@@ -28,6 +28,10 @@ class MbotViewController: UIViewController {
 
     }
     
+    @IBAction func back(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     @IBAction func actionAuto(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         sender.pulsate(sender.isSelected)
