@@ -9,10 +9,22 @@
 import Foundation
 import CoreBluetooth
 
-class BluetoothConnectionHandler: NSObject, CBCentralManagerDelegate  {
+protocol BluetoothConnectionHandlerProtocol {
+    func didConnect(device: CBPeripheral)
+    func didDisconnect(device: CBPeripheral)
+    func didReceiveValue(_ value: Int8)
+}
+
+class BluetoothConnectionHandler: NSObject  {
     
-    static let sharedInstance = BluetoothConnectionHandler()
+    private static let sharedInstance = BluetoothConnectionHandler()
     private var centralManager: CBCentralManager!
+    
+    var delegate: BluetoothConnectionHandlerProtocol?
+    var connectedPeripheral: CBPeripheral?
+    var targetService: CBService?
+    var writableCharacteristic: CBCharacteristic?
+    
     var peripherals: [CBPeripheral] = []
     
     var isScanning: Bool {
@@ -26,33 +38,43 @@ class BluetoothConnectionHandler: NSObject, CBCentralManagerDelegate  {
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     
+    class func shared() -> BluetoothConnectionHandler {
+        return sharedInstance
+    }
+    
     func scan(comp: (_ result: String) -> ()) {
         self.centralManager.scanForPeripherals(withServices: nil, options: nil)
         
     }
     
-    func scanDevices(status: @escaping([CBPeripheral],BLErrors?) -> Void) {
+    func scanDevices(status: @escaping([CBPeripheral]) -> Void) {
         self.centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
        
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
             if self.peripherals.count > 0 {
-                status(self.peripherals,nil)
+                status(self.peripherals)
             }
         })
 
     }
     
-    func cancelScan(status: (Bool,BLErrors?) -> Void) {
+    func cancelScan() {
         self.centralManager.stopScan()
     }
     
-    func endConnection(_ peripheralDevice: CBPeripheral,status: @escaping(Bool) -> Void) {
-        self.centralManager.cancelPeripheralConnection(peripheralDevice)
-    }
-    
     func connectToDevice(_ peripheralDevice: CBPeripheral, _ options: [String:Any]? = nil) {
-        self.centralManager.connect(peripheralDevice, options: options)
+           self.centralManager.connect(peripheralDevice, options: options)
+       }
+    
+    func endConnection(_ peripheralDevice: CBPeripheral) {
+        self.centralManager.cancelPeripheralConnection(peripheralDevice)
+
     }
+}
+
+//MARK: Central manager Delegate
+
+extension BluetoothConnectionHandler: CBCentralManagerDelegate {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         print(central.state)
@@ -60,29 +82,64 @@ class BluetoothConnectionHandler: NSObject, CBCentralManagerDelegate  {
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
-        print(peripheral.name)
-        
         if peripheral.name?.contains("Makeblock") ?? false {
             self.centralManager.stopScan()
             self.peripherals.append(peripheral)
         
         }
-
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        self.connectedPeripheral = peripheral
+        peripheral.delegate = self
+        peripheral.discoverServices(nil)
+        self.delegate?.didConnect(device: peripheral)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        self.connectedPeripheral = nil
+        self.delegate?.didDisconnect(device: peripheral)
     }
     
     
 }
 
-class BluetoothDevice {
-    
-    var name: String = ""
-    
-}
+//MARK: Peripheral Delegate
 
-enum BLErrors: String {
+extension BluetoothConnectionHandler : CBPeripheralDelegate {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard let services = peripheral.services else {
+            return
+        }
+
+        targetService = services.first
+        if let service = services.first {
+            targetService = service
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard let characteristics = service.characteristics else {
+            return
+        }
+
+        for characteristic in characteristics {
+            if characteristic.properties.contains(.write) || characteristic.properties.contains(.writeWithoutResponse) {
+                writableCharacteristic = characteristic
+            }
+            peripheral.setNotifyValue(true, for: characteristic)
+        }
+    }
+
+    // RX functions
     
-    case failure = "Failed to connect"
-    case notFound = "No Devices Found"
-    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        guard let data = characteristic.value, let del = delegate else {
+            return
+        }
+        
+        del.didReceiveValue( data.int8Value() )
+    }
 }
 

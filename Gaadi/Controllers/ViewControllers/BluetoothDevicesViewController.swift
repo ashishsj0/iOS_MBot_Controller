@@ -12,25 +12,39 @@ import CoreBluetooth
 class BluetoothDevicesViewController: UIViewController {
         
     var peripherals: [CBPeripheral] = []
-
     
-    var bluetoothHandler: BluetoothConnectionHandler = BluetoothConnectionHandler()
     @IBOutlet weak var imgScan: UIImageView!
     @IBOutlet weak var tblDevices: UITableView!
     
   //  var uuid = CBUUID.init(string: "0x00000002826152e0")
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.tblDevices.dataSource = self
+        self.tblDevices.delegate = self
+        BluetoothConnectionHandler.shared().delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        if BluetoothConnectionHandler.shared().connectedPeripheral != nil {
+            if self.peripherals.contains(BluetoothConnectionHandler.shared().connectedPeripheral!) {
+                print("device already connected.")
+            }
+        }
+    }
+    
     @IBAction func scanDevices(_ sender: UIButton) {
         
-        if bluetoothHandler.isScanning {
-            bluetoothHandler.cancelScan { status, err in
+        if BluetoothConnectionHandler.shared().isScanning {
+            BluetoothConnectionHandler.shared().cancelScan { status, err in
                 sender.titleLabel?.text = status ? ("Scan") : ("Cancel")
                 status ? self.imgScan.pulsate(false) : self.imgScan.pulsate(true)
             }}
             else {
             self.imgScan.pulsate(true)
             sender.titleLabel?.text = "Cancel"
-            bluetoothHandler.scanDevices { devicesFound, err in
+            BluetoothConnectionHandler.shared().scanDevices { devicesFound, err in
                 sender.titleLabel?.text = devicesFound.isEmpty ? ("Scan") : ("Cancel")
                 if devicesFound.isEmpty {
                     self.imgScan.pulsate(true)
@@ -39,16 +53,18 @@ class BluetoothDevicesViewController: UIViewController {
                     self.peripherals = devicesFound
                     self.tblDevices.reloadData()
                 }
-                
             }
             }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.tblDevices.dataSource = self
-        self.tblDevices.delegate = self
+    
+    func openControllerViewController() {
+    
+        let vc =  storyboard?.instantiateViewController(identifier: "MbotViewController") as! MbotViewController
+        self.navigationController?.pushViewController(vc, animated: true)
+        
     }
+    
 }
 
 //MARK: Table View
@@ -77,7 +93,22 @@ extension BluetoothDevicesViewController: UITableViewDelegate, UITableViewDataSo
 extension BluetoothDevicesViewController: BluetoothDeviceTableViewCellProtocol {
    
     func btnConnectTappedAtRow(_ row: Int) {
-        
+        BluetoothConnectionHandler.shared().connectToDevice(self.peripherals[row])
     }
 }
 
+// MARK: Handling bluetooth connection events
+
+extension BluetoothDevicesViewController: BluetoothConnectionHandlerProtocol {
+    func didReceiveValue(_ value: Int8) {
+        
+    }
+    
+    func didDisconnect(device: CBPeripheral) {
+    
+    }
+    
+    func didConnect(device: CBPeripheral) {
+        self.openControllerViewController()
+    }
+}

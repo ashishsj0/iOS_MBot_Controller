@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreBluetooth
 
 class MbotViewController: UIViewController {
     
@@ -14,21 +15,30 @@ class MbotViewController: UIViewController {
     @IBOutlet weak var imgLeftRight: UIImageView!
     @IBOutlet weak var imgUpDown: UIImageView!
     
-    let sharedArduinoController: ArduinoController = ArduinoController()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        guard let peripheral = BluetoothConnectionHandler.shared().connectedPeripheral else {
+            return
+        }
+        BluetoothConnectionHandler.shared().endConnection(peripheral)
+
     }
     
     @IBAction func actionAuto(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         sender.pulsate(sender.isSelected)
-        sharedArduinoController.autoMode(sender.isSelected)
+        ArduinoController.shared().autoMode(sender.isSelected)
     }
     
     @IBAction func touchDown(_ sender: UIButton) {
         sender.pulsate(true)
         self.moves(sender.tag)
+        
+        ArduinoController.shared().moveBack()
     }
     
     @IBAction func touchUpOut(_ sender: UIButton) {
@@ -44,22 +54,36 @@ class MbotViewController: UIViewController {
     func moves(_ tag: Int) {
         switch tag {
         case 01:
-            sharedArduinoController.turnLeft()
+            ArduinoController.shared().turnLeft()
             break;
         case 02:
-            sharedArduinoController.turnRight()
+            ArduinoController.shared().turnRight()
             break;
         case 03:
-            sharedArduinoController.moveAhead()
+            ArduinoController.shared().moveAhead()
             break;
         case 04:
-            sharedArduinoController.moveBack()
+            ArduinoController.shared().moveBack()
             break;
         default:
             break
         }
     }
     
+}
+
+extension MbotViewController: BluetoothConnectionHandlerProtocol {
+    func didReceiveValue(_ value: Int8) {
+        
+    }
+    
+    func didDisconnect(device: CBPeripheral) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    func didConnect(device: CBPeripheral) {
+    
+    }
 }
 
 
