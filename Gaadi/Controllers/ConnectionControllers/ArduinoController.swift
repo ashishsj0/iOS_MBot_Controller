@@ -21,24 +21,36 @@ class ArduinoController {
         guard let peripheral = BluetoothConnectionHandler.shared().connectedPeripheral, let characteristic = BluetoothConnectionHandler.shared().writableCharacteristic else {
             return
         }
-
+        
         let data = Data.dataWithValue(value: value)
 
         peripheral.writeValue(data, for: characteristic, type: .withResponse)
     }
     
+    func writeValueString(value: String) {
+        guard let peripheral = BluetoothConnectionHandler.shared().connectedPeripheral, let characteristic = BluetoothConnectionHandler.shared().writableCharacteristic else {
+            return
+        }
+
+        peripheral.writeValue(value.data(using: .utf8)!, for: characteristic, type: .withResponse)
+    }
+    
     func autoMode(_ on: Bool = false) {}
+   
     func moveAhead() {
-        
-       
+       self.writeValueString(value: "1")
+        //(value: 1)
     }
     func moveBack() {
-        
-        self.writeValue(value: 1)
-        
+        self.writeValueString(value: "2")
+        //self.writeValue(value: 2)
     }
-    func turnLeft() {}
-    func turnRight() {}
+    func turnLeft() {
+        self.writeValue(value: 3)
+    }
+    func turnRight() {
+        self.writeValue(value: 4)
+    }
     func honk() {}
 }
 
@@ -52,13 +64,3 @@ enum Port: UInt8 {
     case M2 = 0x0A
 }
 
-extension Data {
-    static func dataWithValue(value: Int8) -> Data {
-        var variableValue = value
-        return Data(buffer: UnsafeBufferPointer(start: &variableValue, count: 1))
-    }
-
-    func int8Value() -> Int8 {
-        return Int8(bitPattern: self[0])
-    }
-}

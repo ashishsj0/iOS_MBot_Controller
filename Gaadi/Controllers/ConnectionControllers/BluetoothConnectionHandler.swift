@@ -24,6 +24,9 @@ class BluetoothConnectionHandler: NSObject  {
     var targetService: CBService?
     var writableCharacteristic: CBCharacteristic?
     var peripherals: [CBPeripheral] = []
+    let notifyMTU = 20
+    private var transDataCharateristic: CBCharacteristic?
+
     
     override init() {
         super.init()
@@ -98,6 +101,42 @@ extension BluetoothConnectionHandler: CBCentralManagerDelegate {
         self.delegate?.didDisconnect(device: peripheral)
     }
     
+    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?) {
+        
+    }
+
+    
+    
+    public func send(data: Data) {
+        if let peripheral = self.connectedPeripheral {
+              if peripheral.state == .connected{
+                if let characteristic = self.writableCharacteristic {
+                      var sendIndex = 0
+                      while true {
+                          var amountToSend = data.count - sendIndex
+                          if amountToSend > notifyMTU {
+                              amountToSend = notifyMTU
+                          }
+                          if amountToSend <= 0 {
+                              return;
+                          }
+                          let dataChunk = data.subdata(in:sendIndex..<sendIndex+amountToSend)
+                          peripheral.writeValue(dataChunk, for:characteristic, type: .withoutResponse)
+                          sendIndex += amountToSend
+                      }
+                  }
+              }
+          }
+      }
+    
+   public func readValue() {
+        guard let peripheral = BluetoothConnectionHandler.shared().connectedPeripheral, let characteristic = BluetoothConnectionHandler.shared().writableCharacteristic else {
+            return
+        }
+        
+        peripheral.readValue(for: characteristic)
+        
+    }
     
 }
 
@@ -135,6 +174,7 @@ extension BluetoothConnectionHandler : CBPeripheralDelegate {
         guard let data = characteristic.value, let del = delegate else {
             return
         }
+        print(data)
         
         del.didReceiveValue( data.int8Value() )
     }
