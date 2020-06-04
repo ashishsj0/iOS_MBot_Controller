@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB31E2C72489C071009B5C2B /* BotCode in Resources */ = {isa = PBXBuildFile; fileRef = DB31E2C62489C071009B5C2B /* BotCode */; };
 		DB47CAAC24715651002B4A9E /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB47CAAB24715651002B4A9E /* UIViewExtension.swift */; };
 		DB47CAAE2471595B002B4A9E /* BluetoothDevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB47CAAD2471595B002B4A9E /* BluetoothDevicesViewController.swift */; };
 		DB47CAB1247159B9002B4A9E /* BluetoothDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB47CAB0247159B9002B4A9E /* BluetoothDeviceTableViewCell.swift */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DB31E2C62489C071009B5C2B /* BotCode */ = {isa = PBXFileReference; lastKnownFileType = text; path = BotCode; sourceTree = "<group>"; };
 		DB47CAAB24715651002B4A9E /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		DB47CAAD2471595B002B4A9E /* BluetoothDevicesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDevicesViewController.swift; sourceTree = "<group>"; };
 		DB47CAB0247159B9002B4A9E /* BluetoothDeviceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDeviceTableViewCell.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				DBCD51E1245742C1007C74BF /* Assets.xcassets */,
 				DBCD51E3245742C1007C74BF /* LaunchScreen.storyboard */,
 				DBCD51E6245742C1007C74BF /* Info.plist */,
+				DB31E2C62489C071009B5C2B /* BotCode */,
 			);
 			path = Gaadi;
 			sourceTree = "<group>";
@@ -186,6 +189,7 @@
 				DBCD51E5245742C1007C74BF /* LaunchScreen.storyboard in Resources */,
 				DBCD51E2245742C1007C74BF /* Assets.xcassets in Resources */,
 				DBCD51E0245742BF007C74BF /* Main.storyboard in Resources */,
+				DB31E2C72489C071009B5C2B /* BotCode in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,0 +1,76 @@
+
+#include <MeMCore.h>
+#include <Arduino.h>
+#include <Wire.h>
+#include <SoftwareSerial.h>
+
+MeDCMotor MotorL(M1);
+MeDCMotor MotorR(M2);
+
+int moveSpeed = 200;
+int minSpeed = 48;
+
+void setup() {
+  Serial.begin(115200);
+  //Serial.begin(9600);
+}
+void loop() {
+    printf("%d",0);
+  if(Serial.available()) {
+    
+    
+    char inChar = (char)Serial.read();
+    Serial.println(inChar);
+
+    //String data = Serial.readStringUntil('\n');
+    // Serial.print("You sent me: ");
+    // Serial.println(data);
+
+    if(inChar == '1') {
+        Forward();
+    }
+
+     if(inChar == '2') {
+        Backward();
+    }
+
+     if(inChar == '3') {
+        TurnLeft();
+    }
+
+    if(inChar == '4') {
+        TurnRight();
+    }
+
+    if(inChar == '5') {
+        Stop();
+    }
+
+  }
+}
+
+void Forward()
+{
+  MotorL.run(-moveSpeed);
+  MotorR.run(moveSpeed);
+}
+void Backward()
+{
+  MotorL.run(moveSpeed);
+  MotorR.run(-moveSpeed);
+}
+void TurnLeft()
+{
+  MotorL.run(-moveSpeed/10);
+  MotorR.run(moveSpeed);
+}
+void TurnRight()
+{
+  MotorL.run(-moveSpeed);
+  MotorR.run(moveSpeed/10);
+}
+void Stop()
+{
+  MotorL.run(0);
+  MotorR.run(0);
+}
