@@ -105,8 +105,6 @@ extension BluetoothConnectionHandler: CBCentralManagerDelegate {
         
     }
 
-    
-    
     public func send(data: Data) {
         if let peripheral = self.connectedPeripheral {
               if peripheral.state == .connected{

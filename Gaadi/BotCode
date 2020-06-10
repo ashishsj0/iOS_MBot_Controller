@@ -1,4 +1,3 @@
-
 #include <MeMCore.h>
 #include <Arduino.h>
 #include <Wire.h>
@@ -6,47 +5,44 @@
 
 MeDCMotor MotorL(M1);
 MeDCMotor MotorR(M2);
+MeUltrasonicSensor ultrasonic_1(1);
+MeLineFollower linefollower_1(1);
 
 int moveSpeed = 200;
 int minSpeed = 48;
 
 void setup() {
   Serial.begin(115200);
-  //Serial.begin(9600);
 }
 void loop() {
-    printf("%d",0);
-  if(Serial.available()) {
-    
-    
-    char inChar = (char)Serial.read();
-    Serial.println(inChar);
 
-    //String data = Serial.readStringUntil('\n');
-    // Serial.print("You sent me: ");
-    // Serial.println(data);
+if (Serial.available() >= 4) {
+    int byte1 = Serial.read();
 
-    if(inChar == '1') {
+    if(byte1 == 1) {
         Forward();
     }
-
-     if(inChar == '2') {
+    if(byte1 == 2) {
         Backward();
     }
-
-     if(inChar == '3') {
+    if(byte1 == 3) {
         TurnLeft();
     }
-
-    if(inChar == '4') {
+    if(byte1 == 4) {
         TurnRight();
     }
-
-    if(inChar == '5') {
+    if(byte1 == 5) {
         Stop();
     }
-
-  }
+    if(byte1 == 6) {
+        Honk();
+    }
+    
+    Serial.write(getDistance());
+    Serial.write(getLightBelow());
+    Serial.print(getDistance());
+    Serial.print(getLightBelow());
+}
 }
 
 void Forward()
@@ -73,4 +69,15 @@ void Stop()
 {
   MotorL.run(0);
   MotorR.run(0);
+}
+void Honk() {
+
+}
+
+int getDistance() {
+    return ultrasonic_1.distanceCm();
+}
+
+int getLightBelow() {
+    return linefollower_1.readSensors();
 }

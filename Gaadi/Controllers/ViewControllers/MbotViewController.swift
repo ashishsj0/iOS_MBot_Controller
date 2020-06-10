@@ -15,6 +15,8 @@ class MbotViewController: UIViewController {
     @IBOutlet weak var imgLeftRight: UIImageView!
     @IBOutlet weak var imgUpDown: UIImageView!
     
+    var previousMove: Int = 5;
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -41,8 +43,6 @@ class MbotViewController: UIViewController {
     @IBAction func touchDown(_ sender: UIButton) {
         sender.pulsate(true)
         self.moves(sender.tag)
-        
-        ArduinoController.shared().moveBack()
     }
     
     @IBAction func touchUpOut(_ sender: UIButton) {
@@ -55,19 +55,27 @@ class MbotViewController: UIViewController {
         self.moves(sender.tag)
     }
     
+    
     func moves(_ tag: Int) {
         switch tag {
         case 01:
             ArduinoController.shared().turnLeft()
+            self.moves(previousMove)
             break;
         case 02:
             ArduinoController.shared().turnRight()
+            self.moves(previousMove)
             break;
         case 03:
             ArduinoController.shared().moveAhead()
+            self.previousMove = tag
             break;
         case 04:
             ArduinoController.shared().moveBack()
+            self.previousMove = tag
+            break;
+        case 05:
+            ArduinoController.shared().stop()
             break;
         default:
             break
